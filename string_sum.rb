@@ -2,7 +2,7 @@ require 'minitest/autorun'
 class StringCalculator
   def self.addition(values)
     return 0 if values.empty?
-    values.split(",").map(&:to_i).sum
+    values.split(/,|\n/).map(&:to_i).sum
   end
 end
 
@@ -19,9 +19,14 @@ class StringCalculatorTest < Minitest::Test
   def test_addition_with_multiple_numbers
     assert_equal 30, StringCalculator.addition("4,5,6,7,8")
   end
+  def test_adds_numbers_with_newline
+    assert_equal 10, StringCalculator.addition("3\n2,5")
+  end
+  
 end
 
 puts StringCalculator.addition("") # => 0
 puts StringCalculator.addition("3") # => 3
 puts StringCalculator.addition("7,5") # => 12
 puts StringCalculator.addition("5,6,7,8,9")# => 35
+puts StringCalculator.addition("9\n5,6") # => 20
