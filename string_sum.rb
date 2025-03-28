@@ -2,8 +2,20 @@ require 'minitest/autorun'
 class StringCalculator
   def self.addition(values)
     return 0 if values.empty?
-    values.split(/,|\n/).map(&:to_i).sum
+    delimiter, values = extract_delimiter(values)
+    values_array = values.split(delimiter)
+    values_array.map(&:to_i).sum
   end
+  
+  def self.extract_delimiter(values)
+    if values.start_with?("//")
+      delimiter, values = values[2..].split("\n", 2)
+      [Regexp.escape(delimiter), values]
+    else
+      [/,|\n/, values]
+    end
+  end
+  
 end
 
 class StringCalculatorTest < Minitest::Test
@@ -22,6 +34,9 @@ class StringCalculatorTest < Minitest::Test
   def test_adds_numbers_with_newline
     assert_equal 10, StringCalculator.addition("3\n2,5")
   end
+  def test_adds_with_custom_delimiter
+    assert_equal 10, StringCalculator.addition("//;\n2;8")
+  end
   
 end
 
@@ -30,3 +45,4 @@ puts StringCalculator.addition("3") # => 3
 puts StringCalculator.addition("7,5") # => 12
 puts StringCalculator.addition("5,6,7,8,9")# => 35
 puts StringCalculator.addition("9\n5,6") # => 20
+puts StringCalculator.addition("//;\n30;88") # => 118
