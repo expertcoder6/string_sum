@@ -46,6 +46,10 @@ class StringCalculatorTest < Minitest::Test
   def test_raises_on_negative_number
     assert_raises(RuntimeError) { StringCalculator.addition("2,-3") }
   end
+  def test_exception_message_lists_all_negative_numbers
+    exception = assert_raises(RuntimeError) { StringCalculator.addition("1,-2,-5") }
+    assert_match /negative values not allowed: -2, -5/, exception.message
+  end
 end
 
 puts StringCalculator.addition("") # => 0
@@ -55,3 +59,4 @@ puts StringCalculator.addition("5,6,7,8,9")# => 35
 puts StringCalculator.addition("9\n5,6") # => 20
 puts StringCalculator.addition("//;\n30;88") # => 118
 # puts StringCalculator.addition("8,-9") # unlock the line to see error
+# puts StringCalculator.addition("5,-9,-129,-80,50") # unlock the line to see error
